@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LearnUps Admin</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1A3A8F; --navy-mid: #1E4FC2;
+    --amber: #F5A623; --amber-light: #FBBF24; --amber-pale: #FEF3D7;
+    --white: #FFFFFF; --gray-50: #F8F7F4; --gray-100: #EDEBE4;
+    --gray-300: #C8C4B8; --gray-500: #888275; --gray-700: #4A4540;
+    --gray-900: #1C1917; --green: #16A34A; --red: #DC2626;
+    --sidebar-w: 220px;
+  }
+  body { font-family: system-ui, sans-serif; background: var(--gray-50); color: var(--gray-900); display: flex; min-height: 100vh; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w); background: var(--navy); color: var(--white);
+    position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto;
+    display: flex; flex-direction: column;
+  }
+  .sidebar-logo {
+    padding: 1.25rem 1.25rem 1rem;
+    font-size: 1.1rem; font-weight: 700; letter-spacing: -0.3px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .sidebar-logo span { color: var(--amber); }
+  .sidebar-label {
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(255,255,255,0.35);
+    padding: 1.25rem 1.25rem 0.4rem;
+  }
+  .sidebar nav { flex: 1; padding-bottom: 1rem; }
+  .sidebar nav a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 1.25rem; font-size: 0.875rem; color: rgba(255,255,255,0.65);
+    text-decoration: none; border-radius: 0; transition: all .15s; cursor: pointer;
+  }
+  .sidebar nav a:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.9); }
+  .sidebar nav a.active { background: rgba(245,166,35,0.15); color: var(--amber); border-left: 3px solid var(--amber); }
+  .sidebar-footer {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.78rem; color: rgba(255,255,255,0.35);
+  }
+  .sidebar-footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+  .sidebar-footer a:hover { color: var(--amber); }
+
+  /* ── MAIN ── */
+  .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+
+  .topbar {
+    background: var(--white); border-bottom: 1px solid var(--gray-100);
+    padding: 0 2rem; height: 60px; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 50;
+  }
+  .topbar h1 { font-size: 1rem; font-weight: 600; color: var(--navy); }
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+  .btn-save {
+    background: var(--amber); color: var(--navy); border: none;
+    border-radius: 8px; padding: 8px 20px; font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; transition: all .2s;
+  }
+  .btn-save:hover { background: var(--amber-light); transform: translateY(-1px); }
+  .btn-save:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-preview {
+    background: none; border: 1.5px solid var(--gray-300); color: var(--gray-700);
+    border-radius: 8px; padding: 7px 16px; font-size: 0.875rem; cursor: pointer;
+    text-decoration: none; transition: all .2s;
+  }
+  .btn-preview:hover { border-color: var(--navy); color: var(--navy); }
+
+  /* ── CONTENT AREA ── */
+  .content { padding: 2rem; max-width: 860px; }
+
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+
+  .panel-title {
+    font-size: 1.25rem; font-weight: 700; color: var(--navy);
+    margin-bottom: 0.4rem;
+  }
+  .panel-desc {
+    font-size: 0.875rem; color: var(--gray-500); margin-bottom: 2rem;
+    padding-bottom: 1.5rem; border-bottom: 1px solid var(--gray-100);
+  }
+
+  /* ── FORM ── */
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label {
+    display: block; font-size: 0.8rem; font-weight: 600;
+    color: var(--gray-700); margin-bottom: 5px; letter-spacing: 0.02em;
+  }
+  .form-group input[type="text"],
+  .form-group input[type="url"],
+  .form-group textarea {
+    width: 100%; padding: 9px 12px;
+    border: 1.5px solid var(--gray-100); border-radius: 8px;
+    font-size: 0.875rem; color: var(--gray-900);
+    background: var(--white); transition: border-color .2s;
+    font-family: inherit;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none; border-color: var(--navy-mid);
+    box-shadow: 0 0 0 3px rgba(30,79,194,0.08);
+  }
+  .form-group textarea { resize: vertical; min-height: 72px; line-height: 1.6; }
+  .hint { font-size: 0.75rem; color: var(--gray-500); margin-top: 3px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+  /* ── CARD GROUPS ── */
+  .card-group {
+    background: var(--white); border: 1.5px solid var(--gray-100);
+    border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem;
+  }
+  .card-group-title {
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--amber); margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-100);
+  }
+  .card-group .form-group { margin-bottom: 1rem; }
+  .card-group .form-group:last-child { margin-bottom: 0; }
+
+  /* ── LIST EDITOR ── */
+  .list-editor { }
+  .list-item {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 6px;
+  }
+  .list-item input {
+    flex: 1; padding: 7px 10px;
+    border: 1.5px solid var(--gray-100); border-radius: 7px;
+    font-size: 0.875rem; font-family: inherit;
+  }
+  .list-item input:focus { outline: none; border-color: var(--navy-mid); }
+  .btn-rm {
+    background: none; border: none; color: var(--gray-300); cursor: pointer;
+    font-size: 1.1rem; padding: 2px 6px; border-radius: 4px; transition: color .15s;
+  }
+  .btn-rm:hover { color: var(--red); }
+  .btn-add {
+    background: none; border: 1.5px dashed var(--gray-300); color: var(--gray-500);
+    border-radius: 7px; padding: 6px 14px; font-size: 0.8rem; cursor: pointer;
+    margin-top: 4px; transition: all .15s;
+  }
+  .btn-add:hover { border-color: var(--navy); color: var(--navy); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--navy); color: var(--white);
+    padding: 12px 20px; border-radius: 10px; font-size: 0.875rem;
+    font-weight: 500; opacity: 0; transform: translateY(10px);
+    transition: all .3s; pointer-events: none; z-index: 9999;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+  #toast.error { background: var(--red); }
+
+  .toggle-label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .toggle-label input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--navy); }
+
+  .btn-rm-card {
+    float: right; background: none; border: none;
+    color: var(--gray-300); cursor: pointer; font-size: 0.78rem;
+    padding: 0 4px; border-radius: 4px; transition: color .15s; font-weight: 600;
+  }
+  .btn-rm-card:hover { color: var(--red); }
+  .btn-add-card {
+    background: none; border: 1.5px dashed var(--gray-300); color: var(--gray-500);
+    border-radius: 7px; padding: 8px 16px; font-size: 0.85rem; cursor: pointer;
+    margin-top: 0.5rem; transition: all .15s; display: block; width: 100%;
+  }
+  .btn-add-card:hover { border-color: var(--navy); color: var(--navy); }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">LearnUps <span>Admin</span></div>
+  <nav>
+    <div class="sidebar-label">Page Sections</div>
+    <a href="#" class="active" data-section="general">⚙️ General</a>
+    <a href="#" data-section="nav">🔗 Navigation</a>
+    <a href="#" data-section="hero">🏠 Hero</a>
+    <a href="#" data-section="trust">🏫 Trust Bar</a>
+    <a href="#" data-section="features">✨ Features</a>
+    <a href="#" data-section="how">📋 How It Works</a>
+    <a href="#" data-section="audience">👥 Audience</a>
+    <a href="#" data-section="integration">🔧 Integration</a>
+    <a href="#" data-section="pricing">💰 Pricing</a>
+    <a href="#" data-section="testimonials">⭐ Testimonials</a>
+    <a href="#" data-section="cta">📣 CTA Banner</a>
+    <a href="#" data-section="footer">🦶 Footer</a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="/" target="_blank">↗ View live page</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <h1 id="section-title">General Settings</h1>
+    <div class="topbar-actions">
+      <a href="/" target="_blank" class="btn-preview">↗ Preview</a>
+      <button class="btn-save" id="btn-save" onclick="saveContent()">Save Changes</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- GENERAL -->
+    <div class="section-panel active" id="panel-general">
+      <div class="panel-title">General</div>
+      <div class="panel-desc">Site-wide settings like the page title shown in browser tabs.</div>
+      <div class="form-group">
+        <label>Page Title (browser tab)</label>
+        <input type="text" id="meta_title" value="{{ content.meta.title }}" />
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <div class="section-panel" id="panel-nav">
+      <div class="panel-title">Navigation</div>
+      <div class="panel-desc">Top navigation bar links and CTA buttons.</div>
+
+      <div class="card-group">
+        <div class="card-group-title">Nav Links</div>
+        <div id="nav-links-list">
+          {% for link in content.nav.links %}
+          <div class="list-item" data-type="nav-link">
+            <input type="text" placeholder="Label" class="nav-link-text" value="{{ link.text }}" />
+            <input type="text" placeholder="#anchor or URL" class="nav-link-href" value="{{ link.href }}" style="max-width:160px;" />
+            <button class="btn-rm" onclick="removeItem(this)" title="Remove">✕</button>
+          </div>
+          {% endfor %}
+        </div>
+        <button class="btn-add" onclick="addNavLink()">+ Add link</button>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Login Button Text</label>
+          <input type="text" id="nav_btn_login" value="{{ content.nav.btn_login }}" />
+        </div>
+        <div class="form-group">
+          <label>Login Button URL</label>
+          <input type="text" id="nav_btn_login_href" value="{{ content.nav.btn_login_href }}" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Sign Up Button Text</label>
+          <input type="text" id="nav_btn_signup" value="{{ content.nav.btn_signup }}" />
+        </div>
+        <div class="form-group">
+          <label>Sign Up Button URL</label>
+          <input type="text" id="nav_btn_signup_href" value="{{ content.nav.btn_signup_href }}" />
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="section-panel" id="panel-hero">
+      <div class="panel-title">Hero Section</div>
+      <div class="panel-desc">The large header area at the top of the page.</div>
+
+      <div class="form-group">
+        <label>Badge Text</label>
+        <input type="text" id="hero_badge" value="{{ content.hero.badge }}" />
+      </div>
+
+      <div class="card-group">
+        <div class="card-group-title">Headline (3 lines)</div>
+        <div class="form-group">
+          <label>Line 1</label>
+          <input type="text" id="hero_h1_line1" value="{{ content.hero.h1_line1 }}" />
+        </div>
+        <div class="form-group">
+          <label>Line 2</label>
+          <input type="text" id="hero_h1_line2" value="{{ content.hero.h1_line2 }}" />
+        </div>
+        <div class="form-group">
+          <label>Line 3 (shown in amber)</label>
+          <input type="text" id="hero_h1_line3_em" value="{{ content.hero.h1_line3_em }}" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Subtitle</label>
+        <textarea id="hero_subtitle">{{ content.hero.subtitle }}</textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Primary Button Text</label>
+          <input type="text" id="hero_btn_primary" value="{{ content.hero.btn_primary }}" />
+        </div>
+        <div class="form-group">
+          <label>Primary Button URL</label>
+          <input type="text" id="hero_btn_primary_href" value="{{ content.hero.btn_primary_href }}" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Secondary Button Text</label>
+          <input type="text" id="hero_btn_secondary" value="{{ content.hero.btn_secondary }}" />
+        </div>
+        <div class="form-group">
+          <label>Secondary Button URL</label>
+          <input type="text" id="hero_btn_secondary_href" value="{{ content.hero.btn_secondary_href }}" />
+        </div>
+      </div>
+
+      <div class="card-group">
+        <div class="card-group-title">Stats</div>
+        <div class="form-row-3">
+          <div class="form-group"><label>Stat 1 Number</label><input type="text" id="hero_stat1_num" value="{{ content.hero.stat1_num }}" /></div>
+          <div class="form-group"><label>Stat 1 Label</label><input type="text" id="hero_stat1_label" value="{{ content.hero.stat1_label }}" /></div>
+        </div>
+        <div class="form-row-3">
+          <div class="form-group"><label>Stat 2 Number</label><input type="text" id="hero_stat2_num" value="{{ content.hero.stat2_num }}" /></div>
+          <div class="form-group"><label>Stat 2 Label</label><input type="text" id="hero_stat2_label" value="{{ content.hero.stat2_label }}" /></div>
+        </div>
+        <div class="form-row-3">
+          <div class="form-group"><label>Stat 3 Number</label><input type="text" id="hero_stat3_num" value="{{ content.hero.stat3_num }}" /></div>
+          <div class="form-group"><label>Stat 3 Label</label><input type="text" id="hero_stat3_label" value="{{ content.hero.stat3_label }}" /></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRUST BAR -->
+    <div class="section-panel" id="panel-trust">
+      <div class="panel-title">Trust Bar</div>
+      <div class="panel-desc">The LMS logo strip below the hero.</div>
+      <div class="form-group">
+        <label>Label Text</label>
+        <input type="text" id="trust_label" value="{{ content.trust_bar.label }}" />
+      </div>
+      <div class="form-group">
+        <label>Logos (one per line)</label>
+        <div id="trust-logos-list">
+          {% for logo in content.trust_bar.logos %}
+          <div class="list-item">
+            <input type="text" class="trust-logo-item" value="{{ logo }}" />
+            <button class="btn-rm" onclick="removeItem(this)" title="Remove">✕</button>
+          </div>
+          {% endfor %}
+        </div>
+        <button class="btn-add" onclick="addTrustLogo()">+ Add logo</button>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="section-panel" id="panel-features">
+      <div class="panel-title">Features</div>
+      <div class="panel-desc">The six feature cards grid.</div>
+      <div class="form-group"><label>Section Tag</label><input type="text" id="features_tag" value="{{ content.features.tag }}" /></div>
+      <div class="form-group"><label>Section Title (use &lt;br&gt; for line break)</label><input type="text" id="features_title" value="{{ content.features.title }}" /></div>
+      <div class="form-group"><label>Section Subtitle</label><textarea id="features_subtitle">{{ content.features.subtitle }}</textarea></div>
+
+      <button type="button" class="btn-add-card" onclick="addFeatureCard()">+ Add Feature Card</button>
+      <div id="features-cards-container">
+      {% for card in content.features.cards %}
+      <div class="card-group">
+        <div class="card-group-title">Card {{ loop.index }} <button type="button" class="btn-rm-card" onclick="removeCard(this)">✕ Remove</button></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Icon (emoji)</label>
+            <input type="text" class="features-card-icon" value="{{ card.icon }}" style="max-width:100px;" />
+          </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="features-card-title" value="{{ card.title }}" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="features-card-desc">{{ card.desc }}</textarea>
+        </div>
+      </div>
+      {% endfor %}
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="section-panel" id="panel-how">
+      <div class="panel-title">How It Works</div>
+      <div class="panel-desc">The 3-step process section.</div>
+      <div class="form-group"><label>Section Tag</label><input type="text" id="how_tag" value="{{ content.how_it_works.tag }}" /></div>
+      <div class="form-group"><label>Title (use &lt;br&gt; for line break)</label><input type="text" id="how_title" value="{{ content.how_it_works.title }}" /></div>
+      <div class="form-group"><label>Subtitle</label><textarea id="how_subtitle">{{ content.how_it_works.subtitle }}</textarea></div>
+
+      <button type="button" class="btn-add-card" onclick="addHowStep()">+ Add Step</button>
+      <div id="how-steps-container">
+      {% for step in content.how_it_works.steps %}
+      <div class="card-group">
+        <div class="card-group-title">Step {{ loop.index }} <button type="button" class="btn-rm-card" onclick="removeCard(this)">✕ Remove</button></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Role Tag</label>
+            <input type="text" class="how-step-role" value="{{ step.role_tag }}" />
+          </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="how-step-title" value="{{ step.title }}" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="how-step-desc">{{ step.desc }}</textarea>
+        </div>
+      </div>
+      {% endfor %}
+      </div>
+    </div>
+
+    <!-- AUDIENCE -->
+    <div class="section-panel" id="panel-audience">
+      <div class="panel-title">Audience Split</div>
+      <div class="panel-desc">The side-by-side educator / student cards.</div>
+      <div class="form-group"><label>Section Tag</label><input type="text" id="audience_tag" value="{{ content.audience.tag }}" /></div>
+      <div class="form-group"><label>Section Title</label><input type="text" id="audience_title" value="{{ content.audience.title }}" /></div>
+
+      <div class="card-group">
+        <div class="card-group-title">For Educators</div>
+        <div class="form-group"><label>Label</label><input type="text" id="audience_ed_label" value="{{ content.audience.educator.label }}" /></div>
+        <div class="form-group"><label>Headline</label><input type="text" id="audience_ed_title" value="{{ content.audience.educator.title }}" /></div>
+        <div class="form-group"><label>Description</label><textarea id="audience_ed_desc">{{ content.audience.educator.desc }}</textarea></div>
+        <div class="form-group">
+          <label>Checklist Items</label>
+          <div id="ed-checklist">
+            {% for item in content.audience.educator.checklist %}
+            <div class="list-item"><input type="text" class="ed-check-item" value="{{ item }}" /><button class="btn-rm" onclick="removeItem(this)">✕</button></div>
+            {% endfor %}
+          </div>
+          <button class="btn-add" onclick="addListItem('ed-checklist','ed-check-item')">+ Add item</button>
+        </div>
+        <div class="form-group">
+          <label>Question Type Pills</label>
+          <div id="ed-pills">
+            {% for pill in content.audience.educator.pills %}
+            <div class="list-item"><input type="text" class="ed-pill-item" value="{{ pill }}" /><button class="btn-rm" onclick="removeItem(this)">✕</button></div>
+            {% endfor %}
+          </div>
+          <button class="btn-add" onclick="addListItem('ed-pills','ed-pill-item')">+ Add pill</button>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Button Text</label><input type="text" id="audience_ed_btn" value="{{ content.audience.educator.btn }}" /></div>
+          <div class="form-group"><label>Button URL</label><input type="text" id="audience_ed_btn_href" value="{{ content.audience.educator.btn_href }}" /></div>
+        </div>
+      </div>
+
+      <div class="card-group">
+        <div class="card-group-title">For Students</div>
+        <div class="form-group"><label>Label</label><input type="text" id="audience_st_label" value="{{ content.audience.student.label }}" /></div>
+        <div class="form-group"><label>Headline</label><input type="text" id="audience_st_title" value="{{ content.audience.student.title }}" /></div>
+        <div class="form-group"><label>Description</label><textarea id="audience_st_desc">{{ content.audience.student.desc }}</textarea></div>
+        <div class="form-group">
+          <label>Checklist Items</label>
+          <div id="st-checklist">
+            {% for item in content.audience.student.checklist %}
+            <div class="list-item"><input type="text" class="st-check-item" value="{{ item }}" /><button class="btn-rm" onclick="removeItem(this)">✕</button></div>
+            {% endfor %}
+          </div>
+          <button class="btn-add" onclick="addListItem('st-checklist','st-check-item')">+ Add item</button>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Button Text</label><input type="text" id="audience_st_btn" value="{{ content.audience.student.btn }}" /></div>
+          <div class="form-group"><label>Button URL</label><input type="text" id="audience_st_btn_href" value="{{ content.audience.student.btn_href }}" /></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTEGRATION -->
+    <div class="section-panel" id="panel-integration">
+      <div class="panel-title">Integration Strip</div>
+      <div class="panel-desc">The dark banner showing compatibility badges.</div>
+      <div class="form-group"><label>Title</label><input type="text" id="integration_title" value="{{ content.integration.title }}" /></div>
+      <div class="form-group"><label>Description</label><textarea id="integration_desc">{{ content.integration.desc }}</textarea></div>
+      <div class="form-group">
+        <label>Badges</label>
+        <div id="integration-badges">
+          {% for badge in content.integration.badges %}
+          <div class="list-item"><input type="text" class="int-badge-item" value="{{ badge }}" /><button class="btn-rm" onclick="removeItem(this)">✕</button></div>
+          {% endfor %}
+        </div>
+        <button class="btn-add" onclick="addListItem('integration-badges','int-badge-item')">+ Add badge</button>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="section-panel" id="panel-pricing">
+      <div class="panel-title">Pricing</div>
+      <div class="panel-desc">The three pricing plan cards.</div>
+      <div class="form-group"><label>Section Tag</label><input type="text" id="pricing_tag" value="{{ content.pricing.tag }}" /></div>
+      <div class="form-group"><label>Title (use &lt;br&gt; for line break)</label><input type="text" id="pricing_title" value="{{ content.pricing.title }}" /></div>
+      <div class="form-group"><label>Subtitle</label><textarea id="pricing_subtitle">{{ content.pricing.subtitle }}</textarea></div>
+
+      <button type="button" class="btn-add-card" onclick="addPricingPlan()">+ Add Pricing Plan</button>
+      <div id="pricing-plans-container">
+      {% for plan in content.pricing.plans %}
+      <div class="card-group">
+        <div class="card-group-title">Plan {{ loop.index }}: {{ plan.name }} <button type="button" class="btn-rm-card" onclick="removeCard(this)">✕ Remove</button></div>
+        <div class="form-row">
+          <div class="form-group"><label>Label</label><input type="text" class="plan-label-f" value="{{ plan.label }}" /></div>
+          <div class="form-group"><label>Name</label><input type="text" class="plan-name-f" value="{{ plan.name }}" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Price (e.g. $9)</label><input type="text" class="plan-price-f" value="{{ plan.price }}" /></div>
+          <div class="form-group"><label>Period (e.g. / month)</label><input type="text" class="plan-period-f" value="{{ plan.period }}" /></div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea class="plan-desc-f">{{ plan.desc }}</textarea></div>
+        <div class="form-group">
+          <label>Features (one per line)</label>
+          <div class="plan-features-list">
+            {% for feat in plan.features %}
+            <div class="list-item"><input type="text" class="plan-feat-item" value="{{ feat }}" /><button class="btn-rm" onclick="removeItem(this)">✕</button></div>
+            {% endfor %}
+          </div>
+          <button class="btn-add" onclick="addPlanFeature(this)">+ Add feature</button>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Button Text</label><input type="text" class="plan-btn-f" value="{{ plan.btn }}" /></div>
+          <div class="form-group"><label>Button URL</label><input type="text" class="plan-btn-href-f" value="{{ plan.btn_href }}" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Popular Badge (leave blank to hide)</label><input type="text" class="plan-badge-f" value="{{ plan.popular_badge }}" /></div>
+          <div class="form-group" style="display:flex;align-items:center;padding-top:1.5rem;">
+            <label class="toggle-label">
+              <input type="checkbox" class="plan-highlight-f" {% if plan.highlighted %}checked{% endif %} />
+              Highlighted (dark background)
+            </label>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      </div>
+    </div>
+
+    <!-- TESTIMONIALS -->
+    <div class="section-panel" id="panel-testimonials">
+      <div class="panel-title">Testimonials</div>
+      <div class="panel-desc">The three educator quote cards.</div>
+      <div class="form-group"><label>Section Tag</label><input type="text" id="testimonials_tag" value="{{ content.testimonials.tag }}" /></div>
+      <div class="form-group"><label>Section Title</label><input type="text" id="testimonials_title" value="{{ content.testimonials.title }}" /></div>
+
+      <button type="button" class="btn-add-card" onclick="addTestimonial()">+ Add Testimonial</button>
+      <div id="testimonials-container">
+      {% for t in content.testimonials.list %}
+      <div class="card-group">
+        <div class="card-group-title">Testimonial {{ loop.index }} <button type="button" class="btn-rm-card" onclick="removeCard(this)">✕ Remove</button></div>
+        <div class="form-group"><label>Stars</label><input type="text" class="test-stars" value="{{ t.stars }}" style="max-width:120px;" /></div>
+        <div class="form-group"><label>Quote</label><textarea class="test-quote">{{ t.quote }}</textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>Name</label><input type="text" class="test-name" value="{{ t.name }}" /></div>
+          <div class="form-group"><label>Role</label><input type="text" class="test-role" value="{{ t.role }}" /></div>
+        </div>
+      </div>
+      {% endfor %}
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="section-panel" id="panel-cta">
+      <div class="panel-title">CTA Banner</div>
+      <div class="panel-desc">The amber call-to-action banner near the bottom of the page.</div>
+      <div class="form-group"><label>Headline</label><input type="text" id="cta_title" value="{{ content.cta.title }}" /></div>
+      <div class="form-group"><label>Subtitle</label><textarea id="cta_subtitle">{{ content.cta.subtitle }}</textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Primary Button Text</label><input type="text" id="cta_btn_primary" value="{{ content.cta.btn_primary }}" /></div>
+        <div class="form-group"><label>Primary Button URL</label><input type="text" id="cta_btn_primary_href" value="{{ content.cta.btn_primary_href }}" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Secondary Button Text</label><input type="text" id="cta_btn_secondary" value="{{ content.cta.btn_secondary }}" /></div>
+        <div class="form-group"><label>Secondary Button URL</label><input type="text" id="cta_btn_secondary_href" value="{{ content.cta.btn_secondary_href }}" /></div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="section-panel" id="panel-footer">
+      <div class="panel-title">Footer</div>
+      <div class="panel-desc">Footer description, contact info, column links, and copyright.</div>
+      <div class="form-group"><label>Tagline</label><textarea id="footer_desc">{{ content.footer.desc }}</textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Location</label><input type="text" id="footer_location" value="{{ content.footer.location }}" /></div>
+        <div class="form-group"><label>Email</label><input type="text" id="footer_email" value="{{ content.footer.email }}" /></div>
+      </div>
+      <div class="form-group"><label>Copyright</label><input type="text" id="footer_copyright" value="{{ content.footer.copyright }}" /></div>
+
+      {% for col in content.footer.columns %}
+      <div class="card-group">
+        <div class="card-group-title">Column {{ loop.index }}</div>
+        <div class="form-group"><label>Column Title</label><input type="text" class="footer-col-title" value="{{ col.title }}" /></div>
+        <div class="form-group">
+          <label>Links</label>
+          <div class="footer-col-links">
+            {% for link in col.links %}
+            <div class="list-item" data-type="footer-link">
+              <input type="text" placeholder="Label" class="footer-link-text" value="{{ link.text }}" />
+              <input type="text" placeholder="URL" class="footer-link-href" value="{{ link.href }}" style="max-width:160px;" />
+              <button class="btn-rm" onclick="removeItem(this)">✕</button>
+            </div>
+            {% endfor %}
+          </div>
+          <button class="btn-add" onclick="addFooterLink(this)">+ Add link</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div><!-- /.content -->
+</div><!-- /.main -->
+
+<div id="toast"></div>
+
+<script>
+// ── SECTION NAV ──────────────────────────────────────────────────────────────
+const SECTION_TITLES = {
+  general: 'General Settings', nav: 'Navigation', hero: 'Hero Section',
+  trust: 'Trust Bar', features: 'Features', how: 'How It Works',
+  audience: 'Audience Split', integration: 'Integration', pricing: 'Pricing',
+  testimonials: 'Testimonials', cta: 'CTA Banner', footer: 'Footer',
+};
+
+document.querySelectorAll('.sidebar nav a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const sec = link.dataset.section;
+    document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    link.classList.add('active');
+    document.getElementById('panel-' + sec).classList.add('active');
+    document.getElementById('section-title').textContent = SECTION_TITLES[sec] || sec;
+  });
+});
+
+// ── LIST HELPERS ──────────────────────────────────────────────────────────────
+function removeItem(btn) { btn.closest('.list-item').remove(); }
+
+function addNavLink() {
+  const li = document.createElement('div');
+  li.className = 'list-item'; li.dataset.type = 'nav-link';
+  li.innerHTML = '<input type="text" placeholder="Label" class="nav-link-text" />'
+    + '<input type="text" placeholder="#anchor or URL" class="nav-link-href" style="max-width:160px;" />'
+    + '<button class="btn-rm" onclick="removeItem(this)" title="Remove">✕</button>';
+  document.getElementById('nav-links-list').appendChild(li);
+}
+
+function addTrustLogo() {
+  const li = document.createElement('div');
+  li.className = 'list-item';
+  li.innerHTML = '<input type="text" class="trust-logo-item" placeholder="Logo name" />'
+    + '<button class="btn-rm" onclick="removeItem(this)">✕</button>';
+  document.getElementById('trust-logos-list').appendChild(li);
+}
+
+function addListItem(containerId, itemClass) {
+  const li = document.createElement('div');
+  li.className = 'list-item';
+  li.innerHTML = `<input type="text" class="${itemClass}" />`
+    + '<button class="btn-rm" onclick="removeItem(this)">✕</button>';
+  document.getElementById(containerId).appendChild(li);
+}
+
+function addPlanFeature(btn) {
+  const list = btn.previousElementSibling;
+  const li = document.createElement('div');
+  li.className = 'list-item';
+  li.innerHTML = '<input type="text" class="plan-feat-item" />'
+    + '<button class="btn-rm" onclick="removeItem(this)">✕</button>';
+  list.appendChild(li);
+}
+
+function addFooterLink(btn) {
+  const list = btn.previousElementSibling;
+  const li = document.createElement('div');
+  li.className = 'list-item'; li.dataset.type = 'footer-link';
+  li.innerHTML = '<input type="text" placeholder="Label" class="footer-link-text" />'
+    + '<input type="text" placeholder="URL" class="footer-link-href" style="max-width:160px;" />'
+    + '<button class="btn-rm" onclick="removeItem(this)">✕</button>';
+  list.appendChild(li);
+}
+
+// ── COLLECT CONTENT ───────────────────────────────────────────────────────────
+function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+function collectContent() {
+  // Nav links
+  const navLinks = [...document.querySelectorAll('#nav-links-list .list-item')].map(li => ({
+    text: li.querySelector('.nav-link-text').value.trim(),
+    href: li.querySelector('.nav-link-href').value.trim(),
+  }));
+
+  // Feature cards
+  const featureCards = [...document.querySelectorAll('#features-cards-container .card-group')].map(cg => ({
+    icon: cg.querySelector('.features-card-icon').value.trim(),
+    title: cg.querySelector('.features-card-title').value.trim(),
+    desc: cg.querySelector('.features-card-desc').value.trim(),
+  }));
+
+  // Steps
+  const steps = [...document.querySelectorAll('#how-steps-container .card-group')].map(cg => ({
+    role_tag: cg.querySelector('.how-step-role').value.trim(),
+    title: cg.querySelector('.how-step-title').value.trim(),
+    desc: cg.querySelector('.how-step-desc').value.trim(),
+  }));
+
+  // Pricing plans
+  const plans = [...document.querySelectorAll('#pricing-plans-container .card-group')].map(cg => ({
+    label: cg.querySelector('.plan-label-f').value.trim(),
+    name: cg.querySelector('.plan-name-f').value.trim(),
+    price: cg.querySelector('.plan-price-f').value.trim(),
+    period: cg.querySelector('.plan-period-f').value.trim(),
+    desc: cg.querySelector('.plan-desc-f').value.trim(),
+    features: [...cg.querySelectorAll('.plan-feat-item')].map(i => i.value.trim()).filter(Boolean),
+    btn: cg.querySelector('.plan-btn-f').value.trim(),
+    btn_href: cg.querySelector('.plan-btn-href-f').value.trim(),
+    popular_badge: cg.querySelector('.plan-badge-f').value.trim(),
+    highlighted: cg.querySelector('.plan-highlight-f').checked,
+  }));
+
+  // Testimonials
+  const testimonials = [...document.querySelectorAll('#testimonials-container .card-group')].map(cg => ({
+    stars: cg.querySelector('.test-stars').value.trim(),
+    quote: cg.querySelector('.test-quote').value.trim(),
+    name: cg.querySelector('.test-name').value.trim(),
+    role: cg.querySelector('.test-role').value.trim(),
+  }));
+
+  // Footer columns
+  const footerCols = [...document.querySelectorAll('#panel-footer .card-group')].map(cg => ({
+    title: cg.querySelector('.footer-col-title').value.trim(),
+    links: [...cg.querySelectorAll('.list-item')].map(li => ({
+      text: li.querySelector('.footer-link-text').value.trim(),
+      href: li.querySelector('.footer-link-href').value.trim(),
+    })),
+  }));
+
+  // Trust logos
+  const trustLogos = [...document.querySelectorAll('.trust-logo-item')].map(i => i.value.trim()).filter(Boolean);
+
+  // Integration badges
+  const intBadges = [...document.querySelectorAll('.int-badge-item')].map(i => i.value.trim()).filter(Boolean);
+
+  // Audience checklists & pills
+  const edChecklist = [...document.querySelectorAll('.ed-check-item')].map(i => i.value.trim()).filter(Boolean);
+  const edPills = [...document.querySelectorAll('.ed-pill-item')].map(i => i.value.trim()).filter(Boolean);
+  const stChecklist = [...document.querySelectorAll('.st-check-item')].map(i => i.value.trim()).filter(Boolean);
+
+  return {
+    meta: { title: v('meta_title') },
+    nav: {
+      links: navLinks,
+      btn_login: v('nav_btn_login'),
+      btn_login_href: v('nav_btn_login_href'),
+      btn_signup: v('nav_btn_signup'),
+      btn_signup_href: v('nav_btn_signup_href'),
+    },
+    hero: {
+      badge: v('hero_badge'),
+      h1_line1: v('hero_h1_line1'),
+      h1_line2: v('hero_h1_line2'),
+      h1_line3_em: v('hero_h1_line3_em'),
+      subtitle: v('hero_subtitle'),
+      btn_primary: v('hero_btn_primary'),
+      btn_primary_href: v('hero_btn_primary_href'),
+      btn_secondary: v('hero_btn_secondary'),
+      btn_secondary_href: v('hero_btn_secondary_href'),
+      stat1_num: v('hero_stat1_num'), stat1_label: v('hero_stat1_label'),
+      stat2_num: v('hero_stat2_num'), stat2_label: v('hero_stat2_label'),
+      stat3_num: v('hero_stat3_num'), stat3_label: v('hero_stat3_label'),
+    },
+    trust_bar: { label: v('trust_label'), logos: trustLogos },
+    features: {
+      tag: v('features_tag'),
+      title: v('features_title'),
+      subtitle: v('features_subtitle'),
+      cards: featureCards,
+    },
+    how_it_works: {
+      tag: v('how_tag'),
+      title: v('how_title'),
+      subtitle: v('how_subtitle'),
+      steps: steps,
+    },
+    audience: {
+      tag: v('audience_tag'),
+      title: v('audience_title'),
+      educator: {
+        label: v('audience_ed_label'),
+        title: v('audience_ed_title'),
+        desc: v('audience_ed_desc'),
+        checklist: edChecklist,
+        pills: edPills,
+        btn: v('audience_ed_btn'),
+        btn_href: v('audience_ed_btn_href'),
+      },
+      student: {
+        label: v('audience_st_label'),
+        title: v('audience_st_title'),
+        desc: v('audience_st_desc'),
+        checklist: stChecklist,
+        btn: v('audience_st_btn'),
+        btn_href: v('audience_st_btn_href'),
+      },
+    },
+    integration: {
+      title: v('integration_title'),
+      desc: v('integration_desc'),
+      badges: intBadges,
+    },
+    pricing: {
+      tag: v('pricing_tag'),
+      title: v('pricing_title'),
+      subtitle: v('pricing_subtitle'),
+      plans: plans,
+    },
+    testimonials: {
+      tag: v('testimonials_tag'),
+      title: v('testimonials_title'),
+      list: testimonials,
+    },
+    cta: {
+      title: v('cta_title'),
+      subtitle: v('cta_subtitle'),
+      btn_primary: v('cta_btn_primary'),
+      btn_primary_href: v('cta_btn_primary_href'),
+      btn_secondary: v('cta_btn_secondary'),
+      btn_secondary_href: v('cta_btn_secondary_href'),
+    },
+    footer: {
+      desc: v('footer_desc'),
+      location: v('footer_location'),
+      email: v('footer_email'),
+      columns: footerCols,
+      copyright: v('footer_copyright'),
+    },
+  };
+}
+
+// ── SAVE ─────────────────────────────────────────────────────────────────────
+async function saveContent() {
+  const btn = document.getElementById('btn-save');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  try {
+    const content = collectContent();
+    const res = await fetch('/admin/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(content),
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('✓ Saved successfully!');
+    } else {
+      showToast('Error: ' + (data.error || 'Unknown error'), true);
+    }
+  } catch (err) {
+    showToast('Save failed: ' + err.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save Changes';
+  }
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = isError ? 'error show' : 'show';
+  setTimeout(() => { t.className = ''; }, 3000);
+}
+
+// ── ADD / REMOVE CARD GROUPS ──────────────────────────────────────────────────
+function removeCard(btn) { btn.closest('.card-group').remove(); }
+
+function addFeatureCard() {
+  const div = document.createElement('div');
+  div.className = 'card-group';
+  div.innerHTML = `
+    <div class="card-group-title">New Card <button type="button" class="btn-rm-card" onclick="removeCard(this)">✕ Remove</button></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Icon (emoji)</label>
+        <input type="text" class="features-card-icon" style="max-width:100px;" />
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="features-card-title" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="features-card-desc"></textarea>
+    </div>`;
+  document.getElementById('features-cards-container').appendChild(div);
+}
+
+function addHowStep() {
+  const div = document.createElement('div');
+  div.className = 'card-group';
+  div.innerHTML = `
+    <div class="card-group-title">New Step <button type="button" class="btn-rm-card" onclick="removeCard(this)">✕ Remove</button></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Role Tag</label>
+        <input type="text" class="how-step-role" />
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="how-step-title" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="how-step-desc"></textarea>
+    </div>`;
+  document.getElementById('how-steps-container').appendChild(div);
+}
+
+function addPricingPlan() {
+  const div = document.createElement('div');
+  div.className = 'card-group';
+  div.innerHTML = `
+    <div class="card-group-title">New Plan <button type="button" class="btn-rm-card" onclick="removeCard(this)">✕ Remove</button></div>
+    <div class="form-row">
+      <div class="form-group"><label>Label</label><input type="text" class="plan-label-f" /></div>
+      <div class="form-group"><label>Name</label><input type="text" class="plan-name-f" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Price (e.g. $9)</label><input type="text" class="plan-price-f" /></div>
+      <div class="form-group"><label>Period (e.g. / month)</label><input type="text" class="plan-period-f" /></div>
+    </div>
+    <div class="form-group"><label>Description</label><textarea class="plan-desc-f"></textarea></div>
+    <div class="form-group">
+      <label>Features (one per line)</label>
+      <div class="plan-features-list"></div>
+      <button type="button" class="btn-add" onclick="addPlanFeature(this)">+ Add feature</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Button Text</label><input type="text" class="plan-btn-f" /></div>
+      <div class="form-group"><label>Button URL</label><input type="text" class="plan-btn-href-f" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Popular Badge (leave blank to hide)</label><input type="text" class="plan-badge-f" /></div>
+      <div class="form-group" style="display:flex;align-items:center;padding-top:1.5rem;">
+        <label class="toggle-label">
+          <input type="checkbox" class="plan-highlight-f" />
+          Highlighted (dark background)
+        </label>
+      </div>
+    </div>`;
+  document.getElementById('pricing-plans-container').appendChild(div);
+}
+
+function addTestimonial() {
+  const div = document.createElement('div');
+  div.className = 'card-group';
+  div.innerHTML = `
+    <div class="card-group-title">New Testimonial <button type="button" class="btn-rm-card" onclick="removeCard(this)">✕ Remove</button></div>
+    <div class="form-group"><label>Stars</label><input type="text" class="test-stars" style="max-width:120px;" /></div>
+    <div class="form-group"><label>Quote</label><textarea class="test-quote"></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>Name</label><input type="text" class="test-name" /></div>
+      <div class="form-group"><label>Role</label><input type="text" class="test-role" /></div>
+    </div>`;
+  document.getElementById('testimonials-container').appendChild(div);
+}
+
+// ── KEYBOARD SHORTCUT ─────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+    e.preventDefault();
+    saveContent();
+  }
+});
+</script>
+</body>
+</html>

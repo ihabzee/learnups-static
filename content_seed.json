@@ -1,0 +1,249 @@
+{
+  "meta": {
+    "title": "LearnUps — Low-Cost Homework & Assessment System"
+  },
+  "nav": {
+    "links": [
+      {"text": "Features", "href": "#features"},
+      {"text": "For Educators", "href": "#educators"},
+      {"text": "For Students", "href": "#educators"},
+      {"text": "Pricing", "href": "#pricing"},
+      {"text": "Contact", "href": "#contact"}
+    ],
+    "btn_login": "Log In",
+    "btn_login_href": "#",
+    "btn_signup": "Get Started →",
+    "btn_signup_href": "#"
+  },
+  "hero": {
+    "badge": "Trusted by educators across the US",
+    "h1_line1": "Smarter homework.",
+    "h1_line2": "Simpler grading.",
+    "h1_line3_em": "Tiny price.",
+    "subtitle": "LearnUps is a low-cost online homework and assessment platform built for educators who want meaningful student data — without the enterprise price tag.",
+    "btn_primary": "Start Free Trial →",
+    "btn_primary_href": "#",
+    "btn_secondary": "See How It Works",
+    "btn_secondary_href": "#how-it-works",
+    "stat1_num": "10K+",
+    "stat1_label": "Active students",
+    "stat2_num": "50+",
+    "stat2_label": "Question types",
+    "stat3_num": "$0",
+    "stat3_label": "Student cost"
+  },
+  "trust_bar": {
+    "label": "Integrates seamlessly with your existing LMS",
+    "logos": ["Canvas LMS", "Moodle", "Blackboard", "Brightspace", "Open edX"]
+  },
+  "features": {
+    "tag": "Why LearnUps",
+    "title": "Everything you need.<br>Nothing you don't.",
+    "subtitle": "Purpose-built for instructors who want a powerful, flexible, and affordable assessment tool — not a bloated enterprise suite.",
+    "cards": [
+      {
+        "icon": "📋",
+        "title": "Diverse Question Types",
+        "desc": "Multiple choice, short answer, fill-in-the-blank, matching, ordering, and more — all serving different learning outcomes to meet pedagogical goals."
+      },
+      {
+        "icon": "⚡",
+        "title": "Instant Auto-Grading",
+        "desc": "Save hours every week. LearnUps automatically grades submissions and syncs scores back to your LMS grade book in real time."
+      },
+      {
+        "icon": "📊",
+        "title": "Deep Analytics",
+        "desc": "See which questions students struggle with most. Track performance trends, identify learning gaps, and iterate on your content."
+      },
+      {
+        "icon": "🔗",
+        "title": "LTI Integration",
+        "desc": "Connect LearnUps to Canvas, Moodle, or any LTI-compatible LMS with a few clicks. Grades sync automatically — no manual exports."
+      },
+      {
+        "icon": "📚",
+        "title": "Open Education Resources",
+        "desc": "Adopt OER content and we'll help you build assessments around it — saving you weeks of question-writing time."
+      },
+      {
+        "icon": "🛡️",
+        "title": "Academic Integrity",
+        "desc": "Randomized question pools, time limits, and per-student question shuffling make every attempt unique and harder to share answers."
+      }
+    ]
+  },
+  "how_it_works": {
+    "tag": "How It Works",
+    "title": "Set up in minutes,<br>not weeks.",
+    "subtitle": "No IT department required. No professional services contract. Just your course content and a few clicks.",
+    "steps": [
+      {
+        "role_tag": "Educators",
+        "title": "Connect your LMS",
+        "desc": "Link LearnUps to Canvas or your preferred LMS via LTI in minutes. We walk you through every step."
+      },
+      {
+        "role_tag": "Educators",
+        "title": "Build or adopt your course",
+        "desc": "Create your own questions or adopt OER content with ready-made assessments. Mix question types to deepen evaluation."
+      },
+      {
+        "role_tag": "Students",
+        "title": "Students learn, you see results",
+        "desc": "Students access assignments through their existing LMS. Grades flow back automatically. You focus on teaching."
+      }
+    ]
+  },
+  "audience": {
+    "tag": "Built for both sides of the classroom",
+    "title": "One platform, two experiences",
+    "educator": {
+      "label": "For Educators",
+      "title": "Design assessments that actually measure learning.",
+      "desc": "Stop recycling the same 10 questions. Use our question bank tools, OER integrations, and analytics to build richer, more effective homework experiences.",
+      "checklist": [
+        "Mix question types per learning outcome",
+        "Connect to Canvas in under 5 minutes",
+        "See per-question difficulty analytics",
+        "Transfer grades to your LMS automatically",
+        "OER course content adoption support"
+      ],
+      "pills": ["Multiple Choice", "True / False", "Fill in the Blank", "Matching", "Short Answer", "Ordering"],
+      "btn": "Request Instructor Account →",
+      "btn_href": "#"
+    },
+    "student": {
+      "label": "For Students",
+      "title": "Access homework anywhere, track your progress easily.",
+      "desc": "Students access LearnUps through the same Canvas course they already use. No new accounts to create. No extra apps to install.",
+      "checklist": [
+        "Access via your existing Canvas course",
+        "Instant feedback on submissions",
+        "Progress tracking across all assignments",
+        "Grades appear in Canvas automatically",
+        "Free for all students, always"
+      ],
+      "btn": "Student Registration Guide →",
+      "btn_href": "#"
+    }
+  },
+  "integration": {
+    "title": "Plays nicely with your existing stack",
+    "desc": "LearnUps integrates with any LTI-compatible LMS. Setup takes minutes, not days.",
+    "badges": ["LTI 1.3 Compatible", "Canvas LMS", "Grade Passback", "SSO Support", "FERPA Compliant"]
+  },
+  "pricing": {
+    "tag": "Simple Pricing",
+    "title": "Priced for educators,<br>not enterprise.",
+    "subtitle": "No per-student fees. No hidden costs. Students always use LearnUps for free.",
+    "plans": [
+      {
+        "label": "Starter",
+        "name": "Free",
+        "price": "$0",
+        "period": "/ month",
+        "desc": "Try LearnUps with one course. No credit card required.",
+        "features": ["1 active course", "Up to 50 students", "All question types", "LTI integration", "Email support"],
+        "btn": "Start Free",
+        "btn_href": "#",
+        "highlighted": false,
+        "popular_badge": ""
+      },
+      {
+        "label": "Instructor",
+        "name": "Pro",
+        "price": "$9",
+        "period": "/ month",
+        "desc": "Full access for a single instructor. Unlimited courses and students.",
+        "features": ["Unlimited courses", "Unlimited students", "All question types", "Analytics dashboard", "Grade passback", "OER course adoption", "Priority support"],
+        "btn": "Get Started",
+        "btn_href": "#",
+        "highlighted": true,
+        "popular_badge": "Most Popular"
+      },
+      {
+        "label": "Institution",
+        "name": "Department",
+        "price": "$49",
+        "period": "/ month",
+        "desc": "For departments with multiple instructors who want a shared workspace.",
+        "features": ["Up to 10 instructors", "Shared question bank", "Department analytics", "Admin dashboard", "Custom LTI setup", "Dedicated onboarding", "SLA support"],
+        "btn": "Contact Sales",
+        "btn_href": "#",
+        "highlighted": false,
+        "popular_badge": ""
+      }
+    ]
+  },
+  "testimonials": {
+    "tag": "Testimonials",
+    "title": "Educators love it",
+    "items": [
+      {
+        "stars": "★★★★★",
+        "quote": "Setting up LearnUps in Canvas took me about 20 minutes. My students didn't even notice they were using a different tool — grades just appeared in Canvas like magic.",
+        "name": "Sarah R.",
+        "role": "Physics Instructor, Community College"
+      },
+      {
+        "stars": "★★★★★",
+        "quote": "The variety of question types is what sold me. I can assess the same concept in three different ways and actually see which students truly understand it.",
+        "name": "David M.",
+        "role": "Astronomy Professor, State University"
+      },
+      {
+        "stars": "★★★★★",
+        "quote": "I was spending $400/semester on another homework tool. LearnUps does everything I need for a fraction of the cost, and the support team is incredibly responsive.",
+        "name": "Lin K.",
+        "role": "Chemistry Dept. Chair"
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to upgrade your homework system?",
+    "subtitle": "Join thousands of educators who've switched to LearnUps. Free to start, no credit card needed.",
+    "btn_primary": "Start Your Free Trial",
+    "btn_primary_href": "#",
+    "btn_secondary": "Talk to Our Team",
+    "btn_secondary_href": "#"
+  },
+  "footer": {
+    "desc": "Low-cost online homework and assessment platform for educators who care about student outcomes.",
+    "location": "Newark, CA",
+    "email": "hello@learnups.com",
+    "columns": [
+      {
+        "title": "Product",
+        "links": [
+          {"text": "Features", "href": "#"},
+          {"text": "Pricing", "href": "#"},
+          {"text": "Integrations", "href": "#"},
+          {"text": "Security", "href": "#"},
+          {"text": "Roadmap", "href": "#"}
+        ]
+      },
+      {
+        "title": "Educators",
+        "links": [
+          {"text": "Getting Started", "href": "#"},
+          {"text": "Canvas LTI Guide", "href": "#"},
+          {"text": "OER Courses", "href": "#"},
+          {"text": "Question Types", "href": "#"},
+          {"text": "Analytics", "href": "#"}
+        ]
+      },
+      {
+        "title": "Company",
+        "links": [
+          {"text": "About Us", "href": "#"},
+          {"text": "Blog", "href": "#"},
+          {"text": "Support", "href": "#"},
+          {"text": "Privacy Policy", "href": "#"},
+          {"text": "Terms of Service", "href": "#"}
+        ]
+      }
+    ],
+    "copyright": "© 2025 LearnUps / EdTechs. All rights reserved."
+  }
+}
