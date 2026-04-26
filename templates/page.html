@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>{{ content.meta.title }}</title>
+<title>{{ page.title }} — {{ content.meta.title }}</title>
+<meta name="description" content="{{ page.meta_description }}" />
 <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB5AQAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgGAAAAH/P/YQAAAUBJREFUeJzFk71KA1EQRs/sbtasJkIQElFLI9ik02ewslRfw8InsBU730GwEkxtK6I2ooWiBP+QQBAxMdns3jtWam6iVQSnm7lwOPNxR1Q14D9LVHXlpwdjwBgDgO/7+P7vAB3GILDWmt7BJ+49gVojJTVQLoVEGUAtIn0AEXHkFMX34K72yPLmBWNZZW89x/zsAkZGBgBirR1YIVYh7sRc37cpvuyQz4cE5Q3yGYviEjxXXxERzs+qbO3uM5oc0Wh12D6e4/byAEXoj8wxMFZJ1ePm6hSfJs04g5fJEtonUopUKouIWuix+AKICG9tQ/WkTisJaXVhPBcxGT6wNH0IcQcNJmBmDXpicwxU4b7epJsajLUU8ll8DAXvGUlekagE0RTI9+ZijEmdUDwnFgCs0zjdH3wkYHUYwNAlw57zB+JjlGm7RFaVAAAAAElFTkSuQmCC" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
@@ -575,291 +576,29 @@
     .footer-top { grid-template-columns: 1fr; }
     .hero-stats { gap: 1.25rem; }
   }
+  /* ── CUSTOM PAGE ── */
+  .page-body {
+    max-width: 780px; margin: 0 auto; padding: 4rem 1.5rem 5rem;
+  }
+  .page-body h1 { font-family: var(--serif); font-size: 2.2rem; font-weight: 700; color: var(--navy); margin-bottom: 1.25rem; line-height: 1.2; }
+  .page-body h2 { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--navy); margin: 2rem 0 0.75rem; }
+  .page-body h3 { font-family: var(--serif); font-size: 1.15rem; font-weight: 700; color: var(--navy); margin: 1.5rem 0 0.5rem; }
+  .page-body p { font-size: 0.95rem; line-height: 1.8; color: var(--gray-700); margin-bottom: 1rem; }
+  .page-body ul, .page-body ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  .page-body li { font-size: 0.95rem; line-height: 1.75; color: var(--gray-700); margin-bottom: 0.25rem; }
+  .page-body a { color: var(--navy-light); text-decoration: underline; }
+  .page-body a:hover { color: var(--navy); }
+  .page-body hr { border: none; border-top: 1px solid var(--gray-100); margin: 2rem 0; }
+  .page-body blockquote { border-left: 3px solid var(--amber); padding: 0.75rem 1.25rem; background: var(--amber-pale); border-radius: 0 8px 8px 0; margin: 1.5rem 0; }
+  .page-body blockquote p { color: #92600A; margin: 0; }
 </style>
 </head>
 <body>
 
 {% include "_nav.html" %}
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-inner">
-    <div class="hero-content">
-      <div class="hero-badge">{{ content.hero.badge }}</div>
-      <h1>{{ content.hero.h1_line1 }}<br>{{ content.hero.h1_line2 }}<br><em>{{ content.hero.h1_line3_em }}</em></h1>
-      <p class="hero-sub">{{ content.hero.subtitle }}</p>
-      <div class="hero-actions">
-        <a href="{{ content.hero.btn_primary_href }}" class="btn-hero-primary">{{ content.hero.btn_primary }}</a>
-        <a href="{{ content.hero.btn_secondary_href }}" class="btn-hero-outline">{{ content.hero.btn_secondary }}</a>
-      </div>
-      <div class="hero-stats">
-        <div class="stat-item">
-          <div class="stat-num">{{ content.hero.stat1_num }}</div>
-          <div class="stat-label">{{ content.hero.stat1_label }}</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">{{ content.hero.stat2_num }}</div>
-          <div class="stat-label">{{ content.hero.stat2_label }}</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">{{ content.hero.stat3_num }}</div>
-          <div class="stat-label">{{ content.hero.stat3_label }}</div>
-        </div>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <div class="hv-title">Question Preview</div>
-      <div class="question-card">
-        <div class="q-label">Multiple Choice · Astronomy 101</div>
-        <div class="q-text">What is the approximate distance from Earth to the Sun?</div>
-        <div class="q-options">
-          <div class="q-option">
-            <div class="radio"></div>
-            <span>1 light-year</span>
-          </div>
-          <div class="q-option selected">
-            <div class="radio"></div>
-            <span>1 Astronomical Unit (AU)</span>
-          </div>
-          <div class="q-option">
-            <div class="radio"></div>
-            <span>1 parsec</span>
-          </div>
-          <div class="q-option">
-            <div class="radio"></div>
-            <span>384,400 km</span>
-          </div>
-        </div>
-        <div class="grade-badge">✓ Correct — 10 pts</div>
-      </div>
-      <div class="progress-row">
-        <div class="progress-bar-track"><div class="progress-bar-fill"></div></div>
-        <div class="progress-label">65% complete</div>
-      </div>
-      <div style="margin-top: 12px; font-size: 0.75rem; color: rgba(255,255,255,0.35);">Assignment 4 of 6 · Due in 2 days</div>
-    </div>
-  </div>
-</section>
-
-<!-- TRUST BAR -->
-<div class="trust-bar">
-  <p>{{ content.trust_bar.label }}</p>
-  <div class="trust-logos">
-    {% for logo in content.trust_bar.logos %}
-    <span class="trust-logo">{{ logo }}</span>
-    {% if not loop.last %}<span class="trust-logo">·</span>{% endif %}
-    {% endfor %}
-  </div>
-</div>
-
-<!-- FEATURES -->
-<section class="section section-alt" id="features">
-  <div class="container">
-    <div class="section-header centered">
-      <div class="section-tag">{{ content.features.tag }}</div>
-      <h2 class="section-title">{{ content.features.title | safe }}</h2>
-      <p class="section-sub">{{ content.features.subtitle }}</p>
-    </div>
-    <div class="feature-grid">
-      {% for card in content.features.cards %}
-      <div class="feature-card">
-        <div class="feature-icon">{{ card.icon }}</div>
-        <h3>{{ card.title }}</h3>
-        <p>{{ card.desc }}</p>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="section" id="how-it-works">
-  <div class="container">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;">
-      <div>
-        <div class="section-tag">{{ content.how_it_works.tag }}</div>
-        <h2 class="section-title">{{ content.how_it_works.title | safe }}</h2>
-        <p class="section-sub" style="margin-bottom: 3rem;">{{ content.how_it_works.subtitle }}</p>
-        <div class="steps">
-          {% for step in content.how_it_works.steps %}
-          <div class="step">
-            {% if not loop.last %}<div class="step-line"></div>{% endif %}
-            <div class="step-num-col"><div class="step-num">{{ loop.index }}</div></div>
-            <div class="step-content">
-              <div class="step-tag">{{ step.role_tag }}</div>
-              <h3>{{ step.title }}</h3>
-              <p>{{ step.desc }}</p>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div>
-        <div style="background: var(--navy); border-radius: var(--radius-lg); padding: 2rem; position: relative;">
-          <div style="font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1.25rem;">Grade Sync Preview</div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <div style="background: rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
-              <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Homework 4 — Forces</div>
-              <div style="font-size: 0.75rem; font-weight: 500; background: rgba(22,163,74,0.2); color: #4ADE80; padding: 3px 10px; border-radius: 100px;">92/100</div>
-            </div>
-            <div style="background: rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
-              <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Quiz 2 — Kinematics</div>
-              <div style="font-size: 0.75rem; font-weight: 500; background: rgba(22,163,74,0.2); color: #4ADE80; padding: 3px 10px; border-radius: 100px;">78/100</div>
-            </div>
-            <div style="background: rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
-              <div style="font-size: 0.8rem; color: rgba(255,255,255,0.7);">Midterm Review</div>
-              <div style="font-size: 0.75rem; font-weight: 500; background: rgba(232,160,32,0.2); color: var(--amber-light); padding: 3px 10px; border-radius: 100px;">In Progress</div>
-            </div>
-          </div>
-          <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.08);">
-            <div style="font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em;">Canvas Grade Book — Last sync: 2 min ago</div>
-            <div style="display: flex; gap: 8px;">
-              <div style="flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 8px; text-align: center;">
-                <div style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--amber);">85%</div>
-                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.35);">Class avg.</div>
-              </div>
-              <div style="flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 8px; text-align: center;">
-                <div style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: #4ADE80;">94%</div>
-                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.35);">Completion</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- AUDIENCE SPLIT -->
-<section class="section section-alt" id="educators">
-  <div class="container">
-    <div class="section-header centered" style="margin-bottom: 2.5rem;">
-      <div class="section-tag">{{ content.audience.tag }}</div>
-      <h2 class="section-title">{{ content.audience.title }}</h2>
-    </div>
-    <div class="audience-grid">
-      <div class="audience-card educators">
-        <div class="audience-card-inner">
-          <div>
-            <div class="audience-label">{{ content.audience.educator.label }}</div>
-            <h2>{{ content.audience.educator.title }}</h2>
-            <p>{{ content.audience.educator.desc }}</p>
-            <a href="{{ content.audience.educator.btn_href }}" class="btn-audience-ed">{{ content.audience.educator.btn }}</a>
-          </div>
-          <div>
-            <ul class="check-list">
-              {% for item in content.audience.educator.checklist %}
-              <li><span class="check-icon">✓</span>{{ item }}</li>
-              {% endfor %}
-            </ul>
-            <div class="qt-pills">
-              {% for pill in content.audience.educator.pills %}
-              <span class="qt-pill">{{ pill }}</span>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="audience-card students" id="students">
-        <div class="audience-card-inner">
-          <div>
-            <div class="audience-label">{{ content.audience.student.label }}</div>
-            <h2>{{ content.audience.student.title }}</h2>
-            <p>{{ content.audience.student.desc }}</p>
-            <a href="{{ content.audience.student.btn_href }}" class="btn-audience-st">{{ content.audience.student.btn }}</a>
-          </div>
-          <div>
-            <ul class="check-list">
-              {% for item in content.audience.student.checklist %}
-              <li><span class="check-icon">✓</span>{{ item }}</li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- INTEGRATION STRIP -->
-<div class="integration-strip">
-  <h2>{{ content.integration.title }}</h2>
-  <p>{{ content.integration.desc }}</p>
-  <div class="integration-badges">
-    {% for badge in content.integration.badges %}
-    <div class="int-badge"><span class="int-badge-dot"></span>{{ badge }}</div>
-    {% endfor %}
-  </div>
-</div>
-
-<!-- PRICING -->
-<section class="section section-alt" id="pricing">
-  <div class="container">
-    <div class="section-header centered">
-      <div class="section-tag">{{ content.pricing.tag }}</div>
-      <h2 class="section-title">{{ content.pricing.title | safe }}</h2>
-      <p class="section-sub">{{ content.pricing.subtitle }}</p>
-    </div>
-    <div class="pricing-grid">
-      {% for plan in content.pricing.plans %}
-      <div class="pricing-card{% if plan.highlighted %} featured{% endif %}">
-        {% if plan.popular_badge %}<div class="popular-badge">{{ plan.popular_badge }}</div>{% endif %}
-        <div class="plan-label">{{ plan.label }}</div>
-        <div class="plan-name">{{ plan.name }}</div>
-        <div class="plan-price">
-          <span class="amount">{{ plan.price }}</span>
-          <span class="period">{{ plan.period }}</span>
-        </div>
-        <p class="plan-desc">{{ plan.desc }}</p>
-        <hr class="divider-line" />
-        <ul class="plan-features">
-          {% for feature in plan.features %}
-          <li>{{ feature }}</li>
-          {% endfor %}
-        </ul>
-        <a href="{{ plan.btn_href }}" class="{% if plan.highlighted %}btn-plan-featured{% else %}btn-plan{% endif %}">{{ plan.btn }}</a>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="section" id="testimonials">
-  <div class="container">
-    <div class="section-header centered">
-      <div class="section-tag">{{ content.testimonials.tag }}</div>
-      <h2 class="section-title">{{ content.testimonials.title }}</h2>
-    </div>
-        <div class="testimonials-grid">
-      {% for t in content.testimonials.list %}
-      <div class="testimonial">
-        <div class="stars">{{ t.stars }}</div>
-        <p class="quote">&ldquo;{{ t.quote }}&rdquo;</p>
-        <div class="testimonial-author">
-          <div class="avatar">{{ t.name[:2].upper() }}</div>
-          <div>
-            <div class="author-name">{{ t.name }}</div>
-            <div class="author-role">{{ t.role }}</div>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<!-- CTA BANNER -->
-<div class="cta-banner">
-  <div class="container">
-    <h2>{{ content.cta.title }}</h2>
-    <p>{{ content.cta.subtitle }}</p>
-    <div class="cta-actions">
-      <a href="{{ content.cta.btn_primary_href }}" class="btn-cta-dark">{{ content.cta.btn_primary }}</a>
-      <a href="{{ content.cta.btn_secondary_href }}" class="btn-cta-outline">{{ content.cta.btn_secondary }}</a>
-    </div>
-  </div>
-</div>
+<main class="page-body">
+  {{ page.body | safe }}
+</main>
 
 {% include "_footer.html" %}

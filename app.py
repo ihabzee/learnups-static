@@ -100,6 +100,26 @@ def admin_reset():
     return jsonify({"success": True})
 
 
+@app.route("/admin/pages/<slug>/delete", methods=["POST"])
+@require_auth
+def admin_delete_page(slug):
+    content = get_content()
+    content.setdefault("pages", [])
+    content["pages"] = [p for p in content["pages"] if p.get("slug") != slug]
+    save_content(content)
+    return jsonify({"success": True})
+
+
+@app.route("/<slug>")
+def custom_page(slug):
+    content = get_content()
+    pages = content.get("pages", [])
+    page = next((p for p in pages if p.get("slug") == slug), None)
+    if page is None:
+        return render_template("landing.html", content=content), 404
+    return render_template("page.html", content=content, page=page)
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=os.environ.get("FLASK_DEBUG", "0") == "1")

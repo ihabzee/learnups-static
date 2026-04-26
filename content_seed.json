@@ -1,33 +1,33 @@
 {
   "meta": {
-    "title": "LearnUps \u2014 Low-Cost Homework & Assessment System"
+    "title": "LearnUps — Low-Cost Homework & Assessment System"
   },
   "nav": {
     "links": [
       {
         "text": "Features",
-        "href": "#features"
+        "href": "/#features"
       },
       {
         "text": "For Educators",
-        "href": "#educators"
+        "href": "/#educators"
       },
       {
         "text": "For Students",
-        "href": "#educators"
+        "href": "/#educators"
       },
       {
         "text": "Pricing",
-        "href": "#pricing"
+        "href": "/#pricing"
       },
       {
         "text": "Contact",
-        "href": "#contact"
+        "href": "/#contact"
       }
     ],
     "btn_login": "Log In",
     "btn_login_href": "#",
-    "btn_signup": "Get Started \u2192",
+    "btn_signup": "Get Started →",
     "btn_signup_href": "#"
   },
   "hero": {
@@ -35,8 +35,8 @@
     "h1_line1": "Smarter homework.",
     "h1_line2": "Simpler grading.",
     "h1_line3_em": "Tiny price.",
-    "subtitle": "LearnUps is a low-cost online homework and assessment platform built for educators who want meaningful student data \u2014 without the enterprise price tag.",
-    "btn_primary": "Start Free Trial \u2192",
+    "subtitle": "LearnUps is a low-cost online homework and assessment platform built for educators who want meaningful student data — without the enterprise price tag.",
+    "btn_primary": "Start Free Trial →",
     "btn_primary_href": "#",
     "btn_secondary": "See How It Works",
     "btn_secondary_href": "#how-it-works",
@@ -60,35 +60,35 @@
   "features": {
     "tag": "Why LearnUps",
     "title": "Everything you need.<br>Nothing you don't.",
-    "subtitle": "Purpose-built for instructors who want a powerful, flexible, and affordable assessment tool \u2014 not a bloated enterprise suite.",
+    "subtitle": "Purpose-built for instructors who want a powerful, flexible, and affordable assessment tool — not a bloated enterprise suite.",
     "cards": [
       {
-        "icon": "\ud83d\udccb",
+        "icon": "📋",
         "title": "Diverse Question Types",
-        "desc": "Multiple choice, short answer, fill-in-the-blank, matching, ordering, and more \u2014 all serving different learning outcomes to meet pedagogical goals."
+        "desc": "Multiple choice, short answer, fill-in-the-blank, matching, ordering, and more — all serving different learning outcomes to meet pedagogical goals."
       },
       {
-        "icon": "\u26a1",
+        "icon": "⚡",
         "title": "Instant Auto-Grading",
         "desc": "Save hours every week. LearnUps automatically grades submissions and syncs scores back to your LMS grade book in real time."
       },
       {
-        "icon": "\ud83d\udcca",
+        "icon": "📊",
         "title": "Deep Analytics",
         "desc": "See which questions students struggle with most. Track performance trends, identify learning gaps, and iterate on your content."
       },
       {
-        "icon": "\ud83d\udd17",
+        "icon": "🔗",
         "title": "LTI Integration",
-        "desc": "Connect LearnUps to Canvas, Moodle, or any LTI-compatible LMS with a few clicks. Grades sync automatically \u2014 no manual exports."
+        "desc": "Connect LearnUps to Canvas, Moodle, or any LTI-compatible LMS with a few clicks. Grades sync automatically — no manual exports."
       },
       {
-        "icon": "\ud83d\udcda",
+        "icon": "📚",
         "title": "Open Education Resources",
-        "desc": "Adopt OER content and we'll help you build assessments around it \u2014 saving you weeks of question-writing time."
+        "desc": "Adopt OER content and we'll help you build assessments around it — saving you weeks of question-writing time."
       },
       {
-        "icon": "\ud83d\udee1\ufe0f",
+        "icon": "🛡️",
         "title": "Academic Integrity",
         "desc": "Randomized question pools, time limits, and per-student question shuffling make every attempt unique and harder to share answers."
       }
@@ -138,7 +138,7 @@
         "Short Answer",
         "Ordering"
       ],
-      "btn": "Request Instructor Account \u2192",
+      "btn": "Request Instructor Account →",
       "btn_href": "#"
     },
     "student": {
@@ -152,7 +152,7 @@
         "Grades appear in Canvas automatically",
         "Free for all students, always"
       ],
-      "btn": "Student Registration Guide \u2192",
+      "btn": "Student Registration Guide →",
       "btn_href": "#"
     }
   },
@@ -217,19 +217,19 @@
     "title": "Educators love it",
     "items": [
       {
-        "stars": "\u2605\u2605\u2605\u2605\u2605",
-        "quote": "Setting up LearnUps in Canvas took me about 20 minutes. My students didn't even notice they were using a different tool \u2014 grades just appeared in Canvas like magic.",
+        "stars": "★★★★★",
+        "quote": "Setting up LearnUps in Canvas took me about 20 minutes. My students didn't even notice they were using a different tool — grades just appeared in Canvas like magic.",
         "name": "Sarah R.",
         "role": "Physics Instructor, Community College"
       },
       {
-        "stars": "\u2605\u2605\u2605\u2605\u2605",
+        "stars": "★★★★★",
         "quote": "The variety of question types is what sold me. I can assess the same concept in three different ways and actually see which students truly understand it.",
         "name": "David M.",
         "role": "Astronomy Professor, State University"
       },
       {
-        "stars": "\u2605\u2605\u2605\u2605\u2605",
+        "stars": "★★★★★",
         "quote": "I was spending $400/semester on another homework tool. LearnUps does everything I need for a fraction of the cost, and the support team is incredibly responsive.",
         "name": "Lin K.",
         "role": "Chemistry Dept. Chair"
@@ -325,6 +325,7 @@
         ]
       }
     ],
-    "copyright": "\u00a9 2025 LearnUps / EdTechs. All rights reserved."
-  }
+    "copyright": "© 2025 LearnUps / EdTechs. All rights reserved."
+  },
+  "pages": []
 }

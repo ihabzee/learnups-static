@@ -6,23 +6,23 @@
     "links": [
       {
         "text": "Features",
-        "href": "#features"
+        "href": "/#features"
       },
       {
         "text": "For Educators",
-        "href": "#educators"
+        "href": "/#educators"
       },
       {
         "text": "For Students",
-        "href": "#students"
+        "href": "/#students"
       },
       {
         "text": "Pricing",
-        "href": "#pricing"
+        "href": "/#pricing"
       },
       {
         "text": "Contact",
-        "href": "#contact"
+        "href": "/#contact"
       }
     ],
     "btn_login": "Log In",
@@ -297,7 +297,7 @@
           },
           {
             "text": "Privacy Policy",
-            "href": "#"
+            "href": "privacy-policy"
           },
           {
             "text": "Terms of Service",
@@ -307,5 +307,13 @@
       }
     ],
     "copyright": "© 2025 LearnUps / EdTechs. All rights reserved."
-  }
+  },
+  "pages": [
+    {
+      "slug": "privacy-policy",
+      "title": "Privacy Policy",
+      "meta_description": "Privacy Policy",
+      "body": "<p>Privacy Policy Test</p>"
+    }
+  ]
 }
