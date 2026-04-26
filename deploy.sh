@@ -3,6 +3,13 @@
 # Usage: ADMIN_PASSWORD=yourpass ./deploy.sh
 set -euo pipefail
 
+# Load .env if it exists
+if [[ -f "$(dirname "$0")/.env" ]]; then
+  set -a
+  source "$(dirname "$0")/.env"
+  set +a
+fi
+
 PROJECT_ID="${GOOGLE_CLOUD_PROJECT:-$(gcloud config get-value project 2>/dev/null)}"
 SERVICE_NAME="${SERVICE_NAME:-learnups}"
 REGION="${REGION:-us-central1}"
@@ -45,7 +52,7 @@ gcloud run deploy "$SERVICE_NAME" \
   --platform managed \
   --region "$REGION" \
   --allow-unauthenticated \
-  --set-env-vars "GOOGLE_CLOUD_PROJECT=${PROJECT_ID},ADMIN_PASSWORD=${ADMIN_PW}" \
+  --set-env-vars "GOOGLE_CLOUD_PROJECT=${PROJECT_ID},ADMIN_PASSWORD=${ADMIN_PW},GCS_BUCKET=learnups-content-savvy" \
   --project "$PROJECT_ID"
 
 URL=$(gcloud run services describe "$SERVICE_NAME" \
