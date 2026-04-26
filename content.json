@@ -14,7 +14,7 @@
       },
       {
         "text": "For Students",
-        "href": "#educators"
+        "href": "#students"
       },
       {
         "text": "Pricing",
@@ -187,8 +187,8 @@
         ],
         "btn": "Start Free",
         "btn_href": "#",
-        "highlighted": false,
-        "popular_badge": ""
+        "popular_badge": "",
+        "highlighted": false
       },
       {
         "label": "Instructor",
@@ -207,54 +207,15 @@
         ],
         "btn": "Get Started",
         "btn_href": "#",
-        "highlighted": true,
-        "popular_badge": "Most Popular"
-      },
-      {
-        "label": "Institution",
-        "name": "Department",
-        "price": "$49",
-        "period": "/ month",
-        "desc": "For departments with multiple instructors who want a shared workspace.",
-        "features": [
-          "Up to 10 instructors",
-          "Shared question bank",
-          "Department analytics",
-          "Admin dashboard",
-          "Custom LTI setup",
-          "Dedicated onboarding",
-          "SLA support"
-        ],
-        "btn": "Contact Sales",
-        "btn_href": "#",
-        "highlighted": false,
-        "popular_badge": ""
+        "popular_badge": "Most Popular",
+        "highlighted": true
       }
     ]
   },
   "testimonials": {
     "tag": "Testimonials",
     "title": "Educators love it",
-    "items": [
-      {
-        "stars": "★★★★★",
-        "quote": "Setting up LearnUps in Canvas took me about 20 minutes. My students didn't even notice they were using a different tool — grades just appeared in Canvas like magic.",
-        "name": "Sarah R.",
-        "role": "Physics Instructor, Community College"
-      },
-      {
-        "stars": "★★★★★",
-        "quote": "The variety of question types is what sold me. I can assess the same concept in three different ways and actually see which students truly understand it.",
-        "name": "David M.",
-        "role": "Astronomy Professor, State University"
-      },
-      {
-        "stars": "★★★★★",
-        "quote": "I was spending $400/semester on another homework tool. LearnUps does everything I need for a fraction of the cost, and the support team is incredibly responsive.",
-        "name": "Lin K.",
-        "role": "Chemistry Dept. Chair"
-      }
-    ]
+    "list": []
   },
   "cta": {
     "title": "Ready to upgrade your homework system?",

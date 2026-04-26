@@ -8,4 +8,5 @@ services:
       - PORT=8080
     volumes:
       - ./content.json:/app/content.json
+      - ./templates:/app/templates
     restart: unless-stopped

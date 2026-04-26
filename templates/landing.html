@@ -337,7 +337,8 @@
   }
 
   /* ── AUDIENCE SPLIT ── */
-  .audience-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .audience-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+  .audience-card-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
   .audience-card {
     border-radius: var(--radius-lg); padding: 2.5rem;
     position: relative; overflow: hidden;
@@ -406,7 +407,7 @@
   .int-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
 
   /* ── PRICING ── */
-  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; align-items: start; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; align-items: start; max-width: 860px; margin: 0 auto; }
   .pricing-card {
     background: var(--white); border: 1px solid var(--gray-100);
     border-radius: var(--radius-lg); padding: 2rem;
@@ -562,7 +563,7 @@
     .hero-inner { grid-template-columns: 1fr; }
     .hero-visual { display: none; }
     .feature-grid { grid-template-columns: 1fr 1fr; }
-    .audience-grid { grid-template-columns: 1fr; }
+    .audience-card-inner { grid-template-columns: 1fr; }
     .pricing-grid { grid-template-columns: 1fr; }
     .pricing-card.featured { transform: none; }
     .testimonials-grid { grid-template-columns: 1fr; }
@@ -755,34 +756,42 @@
     </div>
     <div class="audience-grid">
       <div class="audience-card educators">
-        <div class="audience-label">{{ content.audience.educator.label }}</div>
-        <h2>{{ content.audience.educator.title }}</h2>
-        <p>{{ content.audience.educator.desc }}</p>
-        <ul class="check-list">
-          {% for item in content.audience.educator.checklist %}
-          <li><span class="check-icon">✓</span>{{ item }}</li>
-          {% endfor %}
-        </ul>
-        <div class="qt-pills">
-          {% for pill in content.audience.educator.pills %}
-          <span class="qt-pill">{{ pill }}</span>
-          {% endfor %}
-        </div>
-        <div style="margin-top: 1.75rem;">
-          <a href="{{ content.audience.educator.btn_href }}" class="btn-audience-ed">{{ content.audience.educator.btn }}</a>
+        <div class="audience-card-inner">
+          <div>
+            <div class="audience-label">{{ content.audience.educator.label }}</div>
+            <h2>{{ content.audience.educator.title }}</h2>
+            <p>{{ content.audience.educator.desc }}</p>
+            <a href="{{ content.audience.educator.btn_href }}" class="btn-audience-ed">{{ content.audience.educator.btn }}</a>
+          </div>
+          <div>
+            <ul class="check-list">
+              {% for item in content.audience.educator.checklist %}
+              <li><span class="check-icon">✓</span>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            <div class="qt-pills">
+              {% for pill in content.audience.educator.pills %}
+              <span class="qt-pill">{{ pill }}</span>
+              {% endfor %}
+            </div>
+          </div>
         </div>
       </div>
       <div class="audience-card students" id="students">
-        <div class="audience-label">{{ content.audience.student.label }}</div>
-        <h2>{{ content.audience.student.title }}</h2>
-        <p>{{ content.audience.student.desc }}</p>
-        <ul class="check-list">
-          {% for item in content.audience.student.checklist %}
-          <li><span class="check-icon">✓</span>{{ item }}</li>
-          {% endfor %}
-        </ul>
-        <div style="margin-top: 2.5rem;">
-          <a href="{{ content.audience.student.btn_href }}" class="btn-audience-st">{{ content.audience.student.btn }}</a>
+        <div class="audience-card-inner">
+          <div>
+            <div class="audience-label">{{ content.audience.student.label }}</div>
+            <h2>{{ content.audience.student.title }}</h2>
+            <p>{{ content.audience.student.desc }}</p>
+            <a href="{{ content.audience.student.btn_href }}" class="btn-audience-st">{{ content.audience.student.btn }}</a>
+          </div>
+          <div>
+            <ul class="check-list">
+              {% for item in content.audience.student.checklist %}
+              <li><span class="check-icon">✓</span>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
