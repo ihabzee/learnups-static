@@ -6,7 +6,12 @@ services:
     environment:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-changeme}
       - PORT=8080
+      - FLASK_APP=app.py
+      - FLASK_DEBUG=1
     volumes:
+      - ./app.py:/app/app.py
       - ./content.json:/app/content.json
       - ./templates:/app/templates
+      - ./static:/app/static
+    command: flask run --host 0.0.0.0 --port 8080
     restart: unless-stopped

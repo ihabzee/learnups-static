@@ -200,6 +200,36 @@
   .btn-delete-page { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1.5px solid #fca5a5; color: #dc2626; border-radius: 7px; padding: 5px 12px; font-size: 0.8rem; cursor: pointer; transition: all .15s; }
   .btn-delete-page:hover { background: #fef2f2; }
   .page-slug-display { font-family: monospace; font-size: 0.85rem; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 6px; padding: 6px 10px; color: var(--gray-500); user-select: all; }
+
+  /* ── IMAGES PANEL ── */
+  .upload-zone {
+    border: 2px dashed var(--gray-300); border-radius: 12px;
+    padding: 2.5rem; text-align: center; cursor: pointer;
+    transition: all .2s; background: var(--white);
+  }
+  .upload-zone:hover, .upload-zone.drag-over { border-color: var(--navy-mid); background: rgba(30,79,194,0.04); }
+  .upload-zone p { color: var(--gray-500); font-size: 0.875rem; margin-top: 0.5rem; }
+  .upload-zone strong { color: var(--navy); }
+  #upload-file-input { display: none; }
+  .upload-progress { display: none; margin-top: 1rem; }
+  .upload-progress.active { display: block; }
+  .progress-bar-wrap { background: var(--gray-100); border-radius: 99px; height: 6px; overflow: hidden; margin-top: 0.4rem; }
+  .progress-bar { height: 100%; background: var(--navy-mid); width: 0; transition: width .3s; border-radius: 99px; }
+  .uploaded-images { margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+  .uploaded-img-card {
+    border: 1.5px solid var(--gray-100); border-radius: 10px; overflow: hidden;
+    background: var(--white); display: flex; flex-direction: column;
+  }
+  .uploaded-img-card img { width: 100%; height: 110px; object-fit: cover; display: block; background: var(--gray-100); }
+  .uploaded-img-card-footer { padding: 8px; display: flex; gap: 6px; align-items: center; }
+  .btn-copy-url {
+    flex: 1; font-size: 0.75rem; padding: 5px 8px; border-radius: 6px;
+    border: 1.5px solid var(--gray-100); background: var(--gray-50);
+    color: var(--gray-700); cursor: pointer; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; text-align: left; transition: all .15s;
+  }
+  .btn-copy-url:hover { border-color: var(--navy); color: var(--navy); }
+  .btn-copy-url.copied { border-color: var(--green); color: var(--green); }
 </style>
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet" />
 </head>
@@ -224,6 +254,8 @@
     <a href="#" data-section="footer">🦶 Footer</a>
     <div class="sidebar-label" style="margin-top:1rem;">Custom Pages</div>
     <a href="#" data-section="pages">📄 Pages</a>
+    <div class="sidebar-label" style="margin-top:1rem;">Media</div>
+    <a href="#" data-section="images">🖼️ Images</a>
   </nav>
   <div class="sidebar-footer">
     <a href="/" target="_blank">↗ View live page</a>
@@ -683,6 +715,25 @@
       </div>
     </div>
 
+    <!-- IMAGES -->
+    <div class="section-panel" id="panel-images">
+      <div class="panel-title">Images</div>
+      <div class="panel-desc">Upload images and copy their URLs to use anywhere in your content.</div>
+
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('upload-file-input').click()">
+        <strong>Click to upload</strong> or drag &amp; drop files here
+        <p>Images: PNG, JPG, GIF, WebP, SVG &nbsp;·&nbsp; Videos: MP4, WebM, MOV</p>
+        <input type="file" id="upload-file-input" accept="image/*,video/*" multiple />
+      </div>
+
+      <div class="upload-progress" id="upload-progress">
+        <span id="upload-status-text" style="font-size:0.8rem;color:var(--gray-700);">Uploading…</span>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="upload-progress-bar"></div></div>
+      </div>
+
+      <div class="uploaded-images" id="uploaded-images-grid"></div>
+    </div>
+
   </div><!-- /.content -->
 </div><!-- /.main -->
 
@@ -694,7 +745,8 @@ const SECTION_TITLES = {
   general: 'General Settings', nav: 'Navigation', hero: 'Hero Section',
   trust: 'Trust Bar', features: 'Features', how: 'How It Works',
   audience: 'Audience Split', integration: 'Integration', pricing: 'Pricing',
-  testimonials: 'Testimonials', cta: 'CTA Banner', footer: 'Footer', pages: 'Custom Pages',
+  testimonials: 'Testimonials', cta: 'CTA Banner', footer: 'Footer',
+  pages: 'Custom Pages', images: 'Images',
 };
 
 document.querySelectorAll('.sidebar nav a').forEach(link => {
@@ -1057,6 +1109,94 @@ function addTestimonial() {
   document.getElementById('testimonials-container').appendChild(div);
 }
 
+// ── SHARED MEDIA UPLOAD ───────────────────────────────────────────────────────
+function isVideoUrl(url) {
+  return /\.(mp4|webm|mov|avi|ogv)(\?|$)/i.test(url);
+}
+
+async function uploadMediaFile(file) {
+  const fd = new FormData();
+  fd.append('file', file);
+  try {
+    const res = await fetch('/admin/upload', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.url) return data.url;
+    showToast('Upload failed: ' + (data.error || 'unknown error'), true);
+  } catch (err) {
+    showToast('Upload error: ' + err.message, true);
+  }
+  return null;
+}
+
+// ── MEDIA PANEL ───────────────────────────────────────────────────────────────
+(function () {
+  const zone = document.getElementById('upload-zone');
+  const input = document.getElementById('upload-file-input');
+  const progress = document.getElementById('upload-progress');
+  const bar = document.getElementById('upload-progress-bar');
+  const statusText = document.getElementById('upload-status-text');
+  const grid = document.getElementById('uploaded-images-grid');
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    uploadFiles([...e.dataTransfer.files]);
+  });
+  input.addEventListener('change', () => { uploadFiles([...input.files]); input.value = ''; });
+
+  async function uploadFiles(files) {
+    const allowed = files.filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
+    if (!allowed.length) { showToast('No supported files selected.', true); return; }
+    progress.classList.add('active');
+    for (let i = 0; i < allowed.length; i++) {
+      statusText.textContent = `Uploading ${i + 1} of ${allowed.length}…`;
+      bar.style.width = Math.round((i / allowed.length) * 100) + '%';
+      const url = await uploadMediaFile(allowed[i]);
+      if (url) addMediaCard(url);
+    }
+    bar.style.width = '100%';
+    statusText.textContent = 'Done!';
+    setTimeout(() => { progress.classList.remove('active'); bar.style.width = '0'; }, 1500);
+  }
+
+  function addMediaCard(url) {
+    const card = document.createElement('div');
+    card.className = 'uploaded-img-card';
+    let preview;
+    if (isVideoUrl(url)) {
+      preview = document.createElement('video');
+      preview.src = url;
+      preview.muted = true;
+      preview.style.cssText = 'width:100%;height:110px;object-fit:cover;display:block;background:#000;';
+      preview.addEventListener('mouseenter', () => preview.play());
+      preview.addEventListener('mouseleave', () => { preview.pause(); preview.currentTime = 0; });
+    } else {
+      preview = document.createElement('img');
+      preview.src = url;
+      preview.alt = '';
+    }
+    const footer = document.createElement('div');
+    footer.className = 'uploaded-img-card-footer';
+    const btn = document.createElement('button');
+    btn.className = 'btn-copy-url';
+    btn.title = url;
+    btn.textContent = url.split('/').pop();
+    btn.onclick = () => {
+      navigator.clipboard.writeText(url).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = url.split('/').pop(); }, 2000);
+      });
+    };
+    footer.appendChild(btn);
+    card.appendChild(preview);
+    card.appendChild(footer);
+    grid.prepend(card);
+  }
+})();
+
 // ── KEYBOARD SHORTCUT ─────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key === 's') {
@@ -1078,20 +1218,49 @@ function mountQuill(ed) {
   const quill = new Quill(mount, {
     theme: 'snow',
     modules: {
-      toolbar: [
-        [{ header: [1, 2, 3, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['blockquote', 'code-block'],
-        ['link'],
-        [{ color: [] }, { background: [] }],
-        ['clean'],
-      ],
+      toolbar: {
+        container: [
+          [{ header: [1, 2, 3, false] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['blockquote', 'code-block'],
+          ['link', 'image', 'video'],
+          [{ color: [] }, { background: [] }],
+          ['clean'],
+        ],
+        handlers: {
+          image: function () { pickAndInsertMedia(quill, 'image/*', 'image'); },
+          video: function () { pickAndInsertMedia(quill, 'video/*', 'video'); },
+        },
+      },
     },
   });
   const stored = ed.querySelector('.page-body-val').value;
   if (stored) quill.clipboard.dangerouslyPasteHTML(stored);
   ed._quillInstance = quill;
+}
+
+function pickAndInsertMedia(quill, accept, type) {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = accept;
+  input.onchange = async () => {
+    const file = input.files[0];
+    if (!file) return;
+    const url = await uploadMediaFile(file);
+    if (!url) return;
+    const range = quill.getSelection(true);
+    if (type === 'image') {
+      quill.insertEmbed(range.index, 'image', url, 'user');
+      quill.setSelection(range.index + 1, 0, 'user');
+    } else {
+      quill.clipboard.dangerouslyPasteHTML(
+        range.index,
+        `<video controls src="${url}" style="max-width:100%;border-radius:6px;"></video>`
+      );
+    }
+  };
+  input.click();
 }
 
 let newPageCount = 0;
