@@ -197,6 +197,16 @@
   .page-editor .ql-toolbar { border: none; border-bottom: 1px solid var(--gray-200); background: var(--gray-50); }
   .page-editor .ql-container { border: none; font-size: 0.9rem; min-height: 280px; }
   .page-editor .ql-editor { min-height: 280px; }
+  .page-editor .ql-source-btn { float: right; font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important; font-size: 0.78rem !important; width: auto !important; padding: 0 8px !important; }
+  .page-editor .ql-source-btn.active { color: var(--navy) !important; background: var(--amber-pale) !important; border-radius: 4px; }
+  .quill-source-textarea {
+    display: none; width: 100%; min-height: 280px; border: none;
+    padding: 12px 14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.82rem; line-height: 1.55; outline: none; resize: vertical;
+    background: #fafafa; color: #1a1a1a;
+  }
+  .quill-wrap.source-mode .ql-container { display: none; }
+  .quill-wrap.source-mode .quill-source-textarea { display: block; }
   .btn-delete-page { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1.5px solid #fca5a5; color: #dc2626; border-radius: 7px; padding: 5px 12px; font-size: 0.8rem; cursor: pointer; transition: all .15s; }
   .btn-delete-page:hover { background: #fef2f2; }
   .page-slug-display { font-family: monospace; font-size: 0.85rem; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 6px; padding: 6px 10px; color: var(--gray-500); user-select: all; }
@@ -706,7 +716,9 @@
               <label>Content</label>
               <div class="quill-wrap">
                 <div class="quill-editor-mount"></div>
+                <textarea class="quill-source-textarea" spellcheck="false"></textarea>
               </div>
+              <div class="hint"><strong>Pasting raw HTML</strong> (forms, iframes, embeds, scripts)? Click <code>&lt;/&gt;</code> in the toolbar <em>first</em>, then paste into the source view — otherwise the visual editor will strip unsupported tags.</div>
               <input type="hidden" class="page-body-val" value="{{ page.body | e }}" />
             </div>
           </div>
@@ -879,11 +891,18 @@ function collectContent() {
   // Pages
   const pages = [...document.querySelectorAll('#pages-container .page-editor')].map(ed => {
     const qi = ed._quillInstance;
+    const wrap = ed.querySelector('.quill-wrap');
+    const textarea = ed.querySelector('.quill-source-textarea');
+    const inSource = wrap && wrap.classList.contains('source-mode');
+    let body;
+    if (inSource && textarea) body = textarea.value;
+    else if (qi) body = qi.root.innerHTML;
+    else body = ed.querySelector('.page-body-val').value;
     return {
       slug: ed.querySelector('.page-slug-val').value.trim(),
       title: ed.querySelector('.page-title-val').value.trim(),
       meta_description: ed.querySelector('.page-meta-val').value.trim(),
-      body: qi ? qi.root.innerHTML : ed.querySelector('.page-body-val').value,
+      body,
     };
   });
 
@@ -1236,8 +1255,64 @@ function mountQuill(ed) {
     },
   });
   const stored = ed.querySelector('.page-body-val').value;
-  if (stored) quill.clipboard.dangerouslyPasteHTML(stored);
+  const textarea = ed.querySelector('.quill-source-textarea');
+  if (textarea) textarea.value = stored;
+  const hasRawHtml = RAW_HTML_PATTERN.test(stored);
+  if (stored && !hasRawHtml) quill.clipboard.dangerouslyPasteHTML(stored);
   ed._quillInstance = quill;
+
+  // Inject "</>" source-toggle button into the Quill toolbar
+  const toolbar = ed.querySelector('.ql-toolbar');
+  const grp = document.createElement('span');
+  grp.className = 'ql-formats';
+  grp.style.float = 'right';
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'ql-source-btn';
+  btn.textContent = '</>';
+  btn.title = 'Toggle HTML source';
+  btn.onclick = () => toggleSource(ed);
+  grp.appendChild(btn);
+  toolbar.appendChild(grp);
+
+  // If saved HTML has tags Quill would strip, open in source mode immediately
+  if (hasRawHtml) {
+    const wrap = ed.querySelector('.quill-wrap');
+    wrap.classList.add('source-mode');
+    btn.classList.add('active');
+  }
+}
+
+const RAW_HTML_PATTERN = /<\s*(form|input|button|select|textarea|iframe|script|style|object|embed|svg|label)\b/i;
+
+function toggleSource(ed) {
+  const quill = ed._quillInstance;
+  if (!quill) return;
+  const wrap = ed.querySelector('.quill-wrap');
+  const textarea = ed.querySelector('.quill-source-textarea');
+  const btn = ed.querySelector('.ql-source-btn');
+  const goingToSource = !wrap.classList.contains('source-mode');
+  if (goingToSource) {
+    // Only sync from Quill if Quill actually has content — otherwise keep
+    // whatever the user has already typed/pasted into the source textarea.
+    const quillHtml = quill.root.innerHTML;
+    const quillIsEmpty = quill.getText().trim() === '' && !/<(img|video|iframe|hr)/i.test(quillHtml);
+    if (!quillIsEmpty || !textarea.value) textarea.value = quillHtml;
+    textarea.style.height = Math.max(quill.root.offsetHeight, 280) + 'px';
+    wrap.classList.add('source-mode');
+    btn.classList.add('active');
+  } else {
+    if (RAW_HTML_PATTERN.test(textarea.value)) {
+      const ok = confirm(
+        'Switching to visual mode will strip tags like <form>, <iframe>, <script>, <input>, etc.\n\n' +
+        'Stay in source mode to preserve raw HTML. Continue anyway?'
+      );
+      if (!ok) return;
+    }
+    quill.clipboard.dangerouslyPasteHTML(textarea.value);
+    wrap.classList.remove('source-mode');
+    btn.classList.remove('active');
+  }
 }
 
 function pickAndInsertMedia(quill, accept, type) {
@@ -1295,7 +1370,11 @@ function addNewPage() {
       <div class="form-group"><label>Meta Description</label><textarea class="page-meta-val" placeholder="Brief description for search engines…"></textarea></div>
       <div class="form-group">
         <label>Content</label>
-        <div class="quill-wrap"><div class="quill-editor-mount"></div></div>
+        <div class="quill-wrap">
+          <div class="quill-editor-mount"></div>
+          <textarea class="quill-source-textarea" spellcheck="false"></textarea>
+        </div>
+        <div class="hint"><strong>Pasting raw HTML</strong> (forms, iframes, embeds, scripts)? Click <code>&lt;/&gt;</code> in the toolbar <em>first</em>, then paste into the source view — otherwise the visual editor will strip unsupported tags.</div>
         <input type="hidden" class="page-body-val" value="" />
       </div>
     </div>`;
