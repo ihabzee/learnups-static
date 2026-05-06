@@ -1226,6 +1226,26 @@ document.addEventListener('keydown', e => {
 
 // ── QUILL / PAGES ─────────────────────────────────────────────────────────────
 let quillsInitialized = false;
+let videoBlotRegistered = false;
+
+function registerVideoBlot() {
+  if (videoBlotRegistered) return;
+  const BlockEmbed = Quill.import('blots/block/embed');
+  class FileVideoBlot extends BlockEmbed {
+    static create(url) {
+      const node = super.create();
+      node.setAttribute('controls', 'controls');
+      node.setAttribute('src', url);
+      node.setAttribute('style', 'max-width:100%;border-radius:6px;');
+      return node;
+    }
+    static value(node) { return node.getAttribute('src'); }
+  }
+  FileVideoBlot.blotName = 'filevideo';
+  FileVideoBlot.tagName = 'video';
+  Quill.register(FileVideoBlot, true);
+  videoBlotRegistered = true;
+}
 
 function initQuillEditors() {
   // Quill is lazily mounted per-editor when expanded — nothing to do eagerly
@@ -1234,6 +1254,7 @@ function initQuillEditors() {
 function mountQuill(ed) {
   const mount = ed.querySelector('.quill-editor-mount');
   if (!mount || ed._quillInstance) return;
+  registerVideoBlot();
   const quill = new Quill(mount, {
     theme: 'snow',
     modules: {
@@ -1327,13 +1348,10 @@ function pickAndInsertMedia(quill, accept, type) {
     const range = quill.getSelection(true);
     if (type === 'image') {
       quill.insertEmbed(range.index, 'image', url, 'user');
-      quill.setSelection(range.index + 1, 0, 'user');
     } else {
-      quill.clipboard.dangerouslyPasteHTML(
-        range.index,
-        `<video controls src="${url}" style="max-width:100%;border-radius:6px;"></video>`
-      );
+      quill.insertEmbed(range.index, 'filevideo', url, 'user');
     }
+    quill.setSelection(range.index + 1, 0, 'user');
   };
   input.click();
 }

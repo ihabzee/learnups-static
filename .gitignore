@@ -4,3 +4,10 @@ __pycache__/
 *.pyc
 .venv/
 *.egg-info/
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/.gitignore
+/.idea/learnups.iml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/*
